@@ -1,0 +1,22 @@
+{
+  "name": "lanchat-server",
+  "version": "1.0.0",
+  "description": "The LanChat server",
+  "main": "main.js",
+  "scripts": {
+    "test": "node main.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/LITTOMA/lanchat-server.git"
+  },
+  "author": "LITTOMA",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/LITTOMA/lanchat-server/issues"
+  },
+  "homepage": "https://github.com/LITTOMA/lanchat-server#readme",
+  "dependencies": {
+    "express": "^4.17.3"
+  }
+}
