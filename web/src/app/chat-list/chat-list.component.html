@@ -1,0 +1,13 @@
+<div *ngFor="let chat of chats | async">
+    <mat-card *ngIf="chat.type=='text/plain'" class="text-card">
+        <mat-card-header>
+            <mat-card-title>
+                <h1>{{ chat.message }}</h1>
+            </mat-card-title>
+        </mat-card-header>
+        <mat-card-actions>
+            <button mat-button color="primary" name="copy" (click)="copy(chat.message)">Copy</button>
+            <button mat-button color="primary" name="delete" (click)="delete(chat)">Delete</button>
+        </mat-card-actions>
+    </mat-card>
+</div>

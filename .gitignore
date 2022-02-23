@@ -11,9 +11,6 @@ bazel-out
 npm-debug.log
 yarn-error.log
 
-# Angular
-.angular/*
-
 # IDEs and editors
 .idea/
 .project
@@ -30,17 +27,18 @@ yarn-error.log
 !.vscode/launch.json
 !.vscode/extensions.json
 .history/*
+web/.angular/*
+web/.vscode/*
 
 # Miscellaneous
-/.angular/cache
+*.angular/cache
 .sass-cache/
-/connect.lock
-/coverage
-/libpeerconnection.log
+*/connect.lock
+*/coverage
+*/libpeerconnection.log
 testem.log
-/typings
+*/typings
 
 # System files
 .DS_Store
 Thumbs.db
-web/.angular/*
