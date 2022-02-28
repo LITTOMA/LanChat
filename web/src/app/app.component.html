@@ -3,6 +3,10 @@
   <mat-toolbar-row>
     <!-- app title -->
     <span>{{ title }}</span>
+    <span class="topbar-spacer"></span>
+    <button mat-icon-button *ngIf="qrCodeVisible" (click)="showQrCode()" #qrButton>
+      <mat-icon>home</mat-icon>
+    </button>
   </mat-toolbar-row>
 </mat-toolbar>
 
