@@ -78,6 +78,11 @@ export class AppComponent implements OnInit {
   }
 
   postChat() {
+    // ignore empty message
+    if (this.chatContent === '') {
+      return;
+    }
+
     var chat = {} as Chat;
     chat.message = this.chatContent;
     chat.type = 'text/plain';
