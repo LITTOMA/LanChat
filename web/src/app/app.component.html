@@ -11,7 +11,7 @@
 <div class="chat-input-panel">
   <button mat-button name="open-file" (click)="openFile()" style="width: 10%;">File</button>
   <mat-form-field appearance="fill" style="flex: 1;">
-      <textarea matInput [(ngModel)]="chatContent"></textarea>
+      <textarea matInput [(ngModel)]="chatContent" (keydown)="onKeyDown($event)"></textarea>
   </mat-form-field>
   <button mat-button style="width: 10%;" (click)="postChat()">Send</button>
 </div>

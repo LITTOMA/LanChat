@@ -63,6 +63,16 @@ export class AppComponent implements OnInit {
     );
   }
 
+  onKeyDown(event: KeyboardEvent) {
+    if (event.ctrlKey && event.key === 'Enter') {
+      this.chatContent += '\n';
+    }
+    else if (event.key === 'Enter') {
+      event.preventDefault();
+      this.postChat();
+    }
+  }
+
   openFile() {
 
   }
