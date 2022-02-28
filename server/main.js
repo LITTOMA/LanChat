@@ -1,6 +1,7 @@
 const express = require('express');
 
 const app = express();
+const host = '0.0.0.0'
 const port = 3000;
 
 // Admin key is a 16 digit hex string
@@ -31,6 +32,12 @@ function error(status, msg) {
 
 function chatId() {
     return Math.random().toString(16).substring(2, 10);
+}
+
+function addChat(chat) {
+    chat.id = chatId();
+    // insert to the beginning of the array
+    chats.unshift(chat);
 }
 
 app.use(express.json());
@@ -117,14 +124,12 @@ app.post('/api/chats', function (req, res, next) {
 
             // save the file path to the chat message
             chat.messages = './temp/' + file.name;
-            chat.id = chatId();
-            chats.push(chat);
+            addChat(chat);
             res.send(chat);
         });
     } else {
         // save the chat message
-        chat.id = chatId();
-        chats.push(chat);
+        addChat(chat);
         res.send(chat);
     }
 });
@@ -164,6 +169,6 @@ app.use(function (err, req, res, next) {
 app.use(express.static('../web/dist'));
 
 
-app.listen(port, () => {
-    console.log(`Open http://localhost:${port}/?k=${adminKey} to view the chat app.`);
+app.listen(port, host, () => {
+    console.log(`Open http://${host}:${port}/?k=${adminKey} to view the chat app.`);
 })
