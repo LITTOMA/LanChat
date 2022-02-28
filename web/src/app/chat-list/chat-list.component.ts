@@ -19,7 +19,11 @@ export class ChatListComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.refreshChatList();
+    // refresh chat list every 3 seconds
+    setInterval(() => {
+      this.refreshChatList();
+    }
+    , 3000);
   }
 
   copy(s: string) {
