@@ -1,6 +1,5 @@
 import { CdkVirtualScrollViewport } from '@angular/cdk/scrolling';
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { Observable } from 'rxjs';
 import { Chat } from '../../chat';
 import { ChatService } from '../chat.service';
 
@@ -20,11 +19,7 @@ export class ChatListComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.chatService.getChats().subscribe(
-      (chats: Chat[]) => {
-        this.chats = chats;
-      }
-    );
+    this.refreshChatList();
   }
 
   copy(s: string) {
@@ -38,7 +33,18 @@ export class ChatListComponent implements OnInit {
   }
 
   delete(chat: Chat) {
-    this.chatService.deleteChat(chat);
+    this.chatService.deleteChat(chat).subscribe(
+      () => {
+        // success
+        this.refreshChatList();
+      },
+      (error: any) => {
+        // error
+      }
+    );
+  }
+
+  refreshChatList() {
     this.chatService.getChats().subscribe(
       (chats: Chat[]) => {
         this.chats = chats;

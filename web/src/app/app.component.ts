@@ -1,7 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 
+import { ChatService } from './chat.service';
 import { UserService } from './user.service';
+import { Chat } from '../chat';
+import { ChatListComponent } from './chat-list/chat-list.component';
 
 @Component({
   selector: 'app-root',
@@ -10,11 +13,16 @@ import { UserService } from './user.service';
 })
 export class AppComponent implements OnInit {
   title = 'LanChat';
+  chatContent: string = '';
+
+  @ViewChild('chatList', { static: true })
+  chatList!: ChatListComponent;
 
   // constructor
   constructor(
     private http: HttpClient,
-    private userService: UserService
+    private chatService: ChatService,
+    private userService: UserService,
   ) { }
 
   ngOnInit(): void {
@@ -56,6 +64,18 @@ export class AppComponent implements OnInit {
   }
 
   openFile() {
-    
+
+  }
+
+  postChat() {
+    var chat = {} as Chat;
+    chat.message = this.chatContent;
+    chat.type = 'text/plain';
+    this.chatService.addChat(chat).subscribe(
+      (chat: Chat) => {
+        this.chatContent = '';
+        this.chatList.refreshChatList();
+      }
+    );
   }
 }

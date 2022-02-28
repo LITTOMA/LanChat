@@ -6,13 +6,13 @@
   </mat-toolbar-row>
 </mat-toolbar>
 
-<app-chat-list class="app-body"></app-chat-list>
+<app-chat-list class="app-body" #chatList></app-chat-list>
 
 <div class="chat-input-panel">
   <button mat-button name="open-file" (click)="openFile()" style="width: 10%;">File</button>
   <mat-form-field appearance="fill" style="flex: 1;">
-      <textarea matInput></textarea>
+      <textarea matInput [(ngModel)]="chatContent"></textarea>
   </mat-form-field>
-  <button mat-button style="width: 10%;">Send</button>
+  <button mat-button style="width: 10%;" (click)="postChat()">Send</button>
 </div>
 </div>

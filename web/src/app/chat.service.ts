@@ -18,10 +18,10 @@ export class ChatService {
   }
 
   addChat(chat: Chat) {
-    
+    return this.http.post<Chat>(`/api/chats?k=${this.userService.getAccessKey()}`, chat);
   }
 
   deleteChat(chat: Chat) {
-    this.http.delete(`/api/chats/${chat.id}?k=${this.userService.getAccessKey()}`).subscribe();
+    return this.http.delete(`/api/chats/${chat.id}?k=${this.userService.getAccessKey()}`);
   }
 }
