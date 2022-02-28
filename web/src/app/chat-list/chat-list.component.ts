@@ -10,7 +10,7 @@ import { ChatService } from '../chat.service';
   styleUrls: ['./chat-list.component.less']
 })
 export class ChatListComponent implements OnInit {
-  chats!: Observable<Chat[]>;
+  chats!: Chat[];
 
   @ViewChild('chatViewport', { static: true })
   chatViewport!: CdkVirtualScrollViewport;
@@ -20,7 +20,11 @@ export class ChatListComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.chats = this.chatService.getChats();
+    this.chatService.getChats().subscribe(
+      (chats: Chat[]) => {
+        this.chats = chats;
+      }
+    );
   }
 
   copy(s: string) {
@@ -35,6 +39,10 @@ export class ChatListComponent implements OnInit {
 
   delete(chat: Chat) {
     this.chatService.deleteChat(chat);
-    this.chats = this.chatService.getChats();
+    this.chatService.getChats().subscribe(
+      (chats: Chat[]) => {
+        this.chats = chats;
+      }
+    );
   }
 }

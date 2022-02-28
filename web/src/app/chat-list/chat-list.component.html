@@ -1,5 +1,5 @@
 <cdk-virtual-scroll-viewport itemSize="100" class="chat-viewport" #chatViewport>
-    <div fxLayout="row" fxLayoutAlign="space-between" *cdkVirtualFor="let chat of chats | async">
+    <div fxLayout="row" fxLayoutAlign="space-between" *cdkVirtualFor="let chat of chats">
         <mat-card *ngIf="chat.type=='text/plain'" class="text-card">
             <mat-card-content>
                 <p>{{chat.message}}</p>
