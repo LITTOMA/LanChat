@@ -54,4 +54,8 @@ export class AppComponent implements OnInit {
       }
     );
   }
+
+  openFile() {
+    
+  }
 }

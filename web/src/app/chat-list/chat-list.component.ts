@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { CdkVirtualScrollViewport } from '@angular/cdk/scrolling';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Chat } from '../../chat';
 import { ChatService } from '../chat.service';
@@ -10,6 +11,9 @@ import { ChatService } from '../chat.service';
 })
 export class ChatListComponent implements OnInit {
   chats!: Observable<Chat[]>;
+
+  @ViewChild('chatViewport', { static: true })
+  chatViewport!: CdkVirtualScrollViewport;
 
   constructor(
     private chatService: ChatService

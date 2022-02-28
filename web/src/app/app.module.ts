@@ -2,6 +2,7 @@ import { NgModule, OnInit } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { BrowserModule } from '@angular/platform-browser';
 import { HttpClientModule } from '@angular/common/http';
+import { FlexLayoutModule } from '@angular/flex-layout';
 
 import { MaterialModule } from '../material.module';
 
@@ -19,6 +20,7 @@ import { UserService } from './user.service';
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
+    FlexLayoutModule,
     HttpClientModule,
     MaterialModule,
     RouterModule.forRoot([

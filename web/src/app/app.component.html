@@ -1,8 +1,18 @@
-<mat-toolbar>
+<div style="display: flex;min-height: 100vh;flex-direction: column;">
+<mat-toolbar class="top-bar">
   <mat-toolbar-row>
     <!-- app title -->
     <span>{{ title }}</span>
   </mat-toolbar-row>
 </mat-toolbar>
 
-<app-chat-list></app-chat-list>
+<app-chat-list class="app-body"></app-chat-list>
+
+<div class="chat-input-panel">
+  <button mat-button name="open-file" (click)="openFile()" style="width: 10%;">File</button>
+  <mat-form-field appearance="fill" style="flex: 1;">
+      <textarea matInput></textarea>
+  </mat-form-field>
+  <button mat-button style="width: 10%;">Send</button>
+</div>
+</div>

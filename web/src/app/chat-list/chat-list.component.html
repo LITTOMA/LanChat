@@ -1,13 +1,36 @@
-<div *ngFor="let chat of chats | async">
-    <mat-card *ngIf="chat.type=='text/plain'" class="text-card">
-        <mat-card-header>
+<cdk-virtual-scroll-viewport itemSize="100" class="chat-viewport" #chatViewport>
+    <div fxLayout="row" fxLayoutAlign="space-between" *cdkVirtualFor="let chat of chats | async">
+        <mat-card *ngIf="chat.type=='text/plain'" class="text-card">
+            <mat-card-content>
+                <p>{{chat.message}}</p>
+            </mat-card-content>
+            <mat-card-actions align="end">
+                <button mat-button color="primary" name="delete" (click)="delete(chat)">Delete</button>
+                <button mat-button color="primary" name="copy" (click)="copy(chat.message)">Copy</button>
+            </mat-card-actions>
+        </mat-card>
+
+        <mat-card *ngIf="chat.type=='image/png'" class="image-card">
             <mat-card-title>
-                <h1>{{ chat.message }}</h1>
+                <span>{{ chat.message }}</span>
             </mat-card-title>
-        </mat-card-header>
-        <mat-card-actions>
-            <button mat-button color="primary" name="copy" (click)="copy(chat.message)">Copy</button>
-            <button mat-button color="primary" name="delete" (click)="delete(chat)">Delete</button>
-        </mat-card-actions>
-    </mat-card>
-</div>
+            <img mat-card-md-image src="{{ chat.message }}">
+            <mat-card-actions align="end">
+                <button mat-button color="primary" name="delete" (click)="delete(chat)">Delete</button>
+                <button mat-button color="primary" name="copy" (click)="copy(chat.message)">Copy</button>
+                <a mat-button color="primary" href="{{ chat.message }}" download="{{ chat.message }}">Download</a>
+            </mat-card-actions>
+        </mat-card>
+
+        <mat-card *ngIf="chat.type=='application/octet-stream'" class="file-card">
+            <mat-card-title>
+                <span>{{ chat.message }}</span>
+            </mat-card-title>
+            <mat-card-actions align="end">
+                <button mat-button color="primary" name="delete" (click)="delete(chat)">Delete</button>
+                <a mat-button color="primary" href="{{ chat.message }}" download="{{ chat.message }}">Download</a>
+            </mat-card-actions>
+        </mat-card>
+    </div>
+
+</cdk-virtual-scroll-viewport>
