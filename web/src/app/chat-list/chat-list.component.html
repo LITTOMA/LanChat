@@ -1,8 +1,7 @@
 <cdk-virtual-scroll-viewport itemSize="100" class="chat-viewport" #chatViewport>
     <div fxLayout="row" fxLayoutAlign="space-between" *cdkVirtualFor="let chat of chats">
         <mat-card *ngIf="chat.type=='text/plain'" class="text-card">
-            <mat-card-content>
-                <p>{{chat.message}}</p>
+            <mat-card-content [innerText]="chat.message">
             </mat-card-content>
             <mat-card-actions align="end">
                 <button mat-button color="primary" name="delete" (click)="delete(chat)">Delete</button>
