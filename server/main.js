@@ -64,12 +64,27 @@ app.use('/api', function (req, res, next) {
 app.get('/api/admin', function (req, res, next) {
     // key is not valid
     if (req.key !== adminKey) {
-        return next(error(401, 'key is not valid'));
+        res.json({
+            'userKey': userKey
+        })
     }
+    else {
+        // get ip address of network interface
+        var ifaces = require('os').networkInterfaces();
+        var ip = '';
+        for (var dev in ifaces) {
+            ifaces[dev].forEach(function (details) {
+                if (details.family === 'IPv4' && details.address !== '') {
+                    ip = details.address;
+                }
+            });
+        }
 
-    res.json({
-        'userKey': userKey
+        res.json({
+            'userKey': userKey,
+            'joinUrl': `http://${ip}:${port}/?k=${userKey}`
         });
+    }
 });
 
 // example: http://localhost:3000/api/chats?k=adminKey

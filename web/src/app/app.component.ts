@@ -59,12 +59,12 @@ export class AppComponent implements OnInit {
           window.location.href = `/?k=${accessKey}`;
         }
         else {
-          if (admin.userKey) {
+          if (admin.joinUrl) {
             // show qrcode button
             this.qrCodeVisible = true;
 
             // set qrcode as url to current page
-            this.qrdata = `${window.location.href}?k=${admin.userKey}`;
+            this.qrdata = admin.joinUrl;
           } else {
             // hide qrcode button
             this.qrCodeVisible = false;
