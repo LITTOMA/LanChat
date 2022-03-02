@@ -127,6 +127,7 @@ export class AppComponent implements OnInit {
     <h1 mat-dialog-title>Scan QR Code To Join</h1>
     <div mat-dialog-content>
       <qrcode [qrdata]="qrdata" [width]="200"></qrcode>
+      <a href="{{qrdata}}" target="_blank">Join</a>
     </div>
   `,
   styles: [`
