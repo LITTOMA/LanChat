@@ -1,5 +1,5 @@
 import { Component, Inject, OnInit, ViewChild } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpEventType } from '@angular/common/http';
 
 import { ChatService } from './chat.service';
 import { UserService } from './user.service';
@@ -17,9 +17,13 @@ export class AppComponent implements OnInit {
   chatContent: string = '';
   qrdata: string = '';
   qrCodeVisible: boolean = false;
+  selectedFiles!: File[];
 
   @ViewChild('chatList', { static: true })
   chatList!: ChatListComponent;
+
+  @ViewChild('selectFile', { static: true })
+  selectFile!: HTMLInputElement;
 
   // constructor
   constructor(
@@ -92,7 +96,19 @@ export class AppComponent implements OnInit {
   }
 
   openFile() {
+    var input = document.createElement('input');
+    input.type = 'file';
+    input.multiple = true;
+    input.onchange = (e: any) => {
+      if (e.target) {
+        this.selectedFiles = Array.from(e.target.files);
+      }
+    }
+    input.click();
+  }
 
+  removeFile(file: File) {
+    this.selectedFiles = this.selectedFiles.filter((f: File) => f !== file);
   }
 
   showQrCode() {
@@ -105,19 +121,51 @@ export class AppComponent implements OnInit {
 
   postChat() {
     // ignore empty message
-    if (this.chatContent === '') {
+    if (!this.chatContent && !this.selectedFiles) {
       return;
     }
 
-    var chat = {} as Chat;
-    chat.message = this.chatContent;
-    chat.type = 'text/plain';
-    this.chatService.addChat(chat).subscribe(
-      (chat: Chat) => {
-        this.chatContent = '';
-        this.chatList.refreshChatList();
+    if (this.chatContent) {
+      var chat = {} as Chat;
+      chat.message = this.chatContent;
+      chat.type = 'text/plain';
+      this.chatService.addChat(chat).subscribe(
+        (chat: Chat) => {
+          this.chatContent = '';
+          this.chatList.refreshChatList();
+        }
+      );
+    }
+
+    // upload files
+    if (this.selectedFiles) {
+      var files = this.selectedFiles;
+      this.selectedFiles = [];
+
+      for (let file of files) {
+        console.log(file);
+
+        // construct file chat
+        var chat = {} as Chat;
+        chat.message = file.name;
+        chat.type = 'application/octet-stream';
+
+        this.chatService.addChat(chat).subscribe(
+          (chat: Chat) => {
+            this.chatList.addTemporyChat(chat);
+            this.chatService.uploadFile(chat, file).subscribe(
+              (event: any) => {
+                if (event.type === HttpEventType.UploadProgress) {
+                  chat.progress = Math.round(100 * event.loaded / event.total);
+                }
+                else if (event.type === HttpEventType.Response) {
+                  console.log(event.body);
+                }
+              }
+            );
+          })
       }
-    );
+    }
   }
 }
 

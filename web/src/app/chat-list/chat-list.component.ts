@@ -19,11 +19,11 @@ export class ChatListComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+    this.chats = [];
     // refresh chat list every second
     setInterval(() => {
       this.refreshChatList();
-    }
-    , 1000);
+    }, 10000);
   }
 
   copy(s: string) {
@@ -48,11 +48,24 @@ export class ChatListComponent implements OnInit {
     );
   }
 
+  download(chat: Chat) {
+    this.chatService.getFile(chat);
+  }
+
   refreshChatList() {
     this.chatService.getChats().subscribe(
       (chats: Chat[]) => {
-        this.chats = chats;
+        if (!this.chats) {
+          this.chats = chats;
+        } else {
+          var tempChats = this.chats.filter(chat => chat.progress !== 100);
+          this.chats = tempChats.concat(chats);
+        }
       }
     );
+  }
+
+  addTemporyChat(chat: Chat) {
+    this.chats.unshift(chat);
   }
 }

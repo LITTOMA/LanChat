@@ -1,22 +1,30 @@
 <div style="display: flex;min-height: 100vh;flex-direction: column;">
-<mat-toolbar class="top-bar">
-  <mat-toolbar-row>
-    <!-- app title -->
-    <span>{{ title }}</span>
-    <span class="topbar-spacer"></span>
-    <button mat-icon-button *ngIf="qrCodeVisible" (click)="showQrCode()" #qrButton>
-      <mat-icon>add_comment</mat-icon>
-    </button>
-  </mat-toolbar-row>
-</mat-toolbar>
+  <mat-toolbar class="top-bar">
+    <mat-toolbar-row>
+      <!-- app title -->
+      <span>{{ title }}</span>
+      <span class="topbar-spacer"></span>
+      <button mat-icon-button *ngIf="qrCodeVisible" (click)="showQrCode()" #qrButton>
+        <mat-icon>add_comment</mat-icon>
+      </button>
+    </mat-toolbar-row>
+  </mat-toolbar>
 
-<app-chat-list class="app-body" #chatList></app-chat-list>
+  <app-chat-list class="app-body" #chatList></app-chat-list>
 
-<div class="chat-input-panel">
-  <button mat-button name="open-file" (click)="openFile()" style="width: 10%;">File</button>
-  <mat-form-field appearance="fill" style="flex: 1;">
-      <textarea matInput [(ngModel)]="chatContent" (keydown)="onKeyDown($event)"></textarea>
-  </mat-form-field>
-  <button mat-button style="width: 10%;" (click)="postChat()">Send</button>
-</div>
+  <div class="chat-input-panel">
+    <button mat-button name="open-file" (click)="openFile()" style="width: 10%;">File</button>
+    <mat-form-field appearance="fill" style="flex: 1;">
+      <mat-chip-list #fileChipList>
+        <mat-chip *ngFor="let file of selectedFiles" (removed)="removeFile(file)">
+          {{ file.name }}
+          <button matChipRemove>
+            <mat-icon>cancel</mat-icon>
+          </button>
+        </mat-chip>
+        <input matInput [matChipInputFor]="fileChipList" [(ngModel)]="chatContent" (keydown)="onKeyDown($event)" />
+      </mat-chip-list>
+    </mat-form-field>
+    <button mat-button style="width: 10%;" (click)="postChat()">Send</button>
+  </div>
 </div>

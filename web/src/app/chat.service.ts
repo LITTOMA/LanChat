@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpRequest } from '@angular/common/http';
 import { Chat } from '../chat';
 import { UserService } from './user.service';
 
@@ -23,5 +23,19 @@ export class ChatService {
 
   deleteChat(chat: Chat) {
     return this.http.delete(`/api/chats/${chat.id}?k=${this.userService.getAccessKey()}`);
+  }
+
+  uploadFile(chat: Chat, file: File) {
+    var formData: FormData = new FormData();
+    formData.append('file', file);
+    var req = new HttpRequest('POST', `/api/files/${chat.id}?k=${this.userService.getAccessKey()}`, formData, {
+      reportProgress: true,
+      responseType: 'json'
+    })
+    return this.http.request<Chat>(req);
+  }
+
+  getFile(chat: Chat) {
+    window.open(`/api/files/${chat.id}?k=${this.userService.getAccessKey()}`);
   }
 }

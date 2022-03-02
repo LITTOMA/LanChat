@@ -1,8 +1,11 @@
 const express = require('express');
+const fileUpload = require('express-fileupload');
+const bodyParser = require('body-parser');
+const morgan = require('morgan');
 
 const app = express();
 const host = '0.0.0.0'
-const port = 3000;
+const port = 3001;
 
 // Admin key is a 16 digit hex string
 const adminKey = Math.random().toString(16).substring(2, 18);
@@ -24,6 +27,11 @@ var chats = [
     { 'id': 3, 'type': 'image/png', 'message': '/files/path/to/image.png' },
 ];
 
+var files = [
+    { 'chatid': 1, 'path': '/files/path/to/file.txt' },
+    { 'chatid': 2, 'path': '/files/path/to/image.png' },
+];
+
 function error(status, msg) {
     var err = new Error(msg);
     err.status = status;
@@ -41,6 +49,12 @@ function addChat(chat) {
 }
 
 app.use(express.json());
+app.use(fileUpload({
+    createParentPath: true,
+    limits: { fileSize: 1024 * 1024 * 1024 },
+}));
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(morgan('dev'));
 
 app.use('/api', function (req, res, next) {
     var key = req.query['k'];
@@ -89,7 +103,10 @@ app.get('/api/admin', function (req, res, next) {
 
 // example: http://localhost:3000/api/chats?k=adminKey
 app.get('/api/chats', function (req, res, next) {
-    res.send(chats);
+    res.send(chats.filter(function (chat) {
+        // return chats where progress is 100
+        return chat.progress === 100;
+    }));
 });
 
 // example: http://localhost:3000/api/chats/{chatid}?k=adminKey
@@ -120,33 +137,18 @@ app.post('/api/chats', function (req, res, next) {
     }
 
     // chat message type is not valid
-    if (chat.type !== 'text/plain' && chat.type !== 'application/octet-stream' && chat.type !== 'image/png') {
+    if (chat.type !== 'text/plain' && chat.type !== 'application/octet-stream') {
         return next(error(400, 'chat message type is not valid'));
     }
 
-    // if chat message is a file, save the file to the temp directory
-    if (chat.type === 'application/octet-stream' || chat.type === 'image/png') {
-        var file = req.files.file;
-        if (!file) {
-            return next(error(400, 'file is not defined'));
-        }
-
-        // save the file to the temp directory
-        file.mv('./temp/' + file.name, function (err) {
-            if (err) {
-                return next(error(500, 'failed to save file'));
-            }
-
-            // save the file path to the chat message
-            chat.messages = './temp/' + file.name;
-            addChat(chat);
-            res.send(chat);
-        });
-    } else {
-        // save the chat message
-        addChat(chat);
-        res.send(chat);
+    chat.progress = 0;
+    if (chat.type === 'text/plain') {
+        chat.progress = 100;
     }
+
+    // save the chat message
+    addChat(chat);
+    res.send(chat);
 });
 
 app.delete('/api/chats/:id', function (req, res, next) {
@@ -169,7 +171,76 @@ app.delete('/api/chats/:id', function (req, res, next) {
         return c.id != id;
     });
 
+    if (chat.type === 'application/octet-stream') {
+        var file = files.find(function (f) {
+            return f.chatid == id;
+        });
+
+        if (file) {
+            files = files.filter(function (f) {
+                return f.chatid != id;
+            });
+
+            // delete the file from the system temp directory
+            require('fs').unlink(file.path, function (err) {
+                if (err) {
+                    console.log(err);
+                }
+            });
+        }
+    }
+
     res.send(chat);
+});
+
+app.get('/api/files/:id', function (req, res, next) {
+    var id = req.params.id;
+    var fileChat = chats.find(function (chat) {
+        return chat.id === id;
+    });
+
+    if (!fileChat) {
+        return next(error(404, 'file not found'));
+    }
+
+    var file = files.find(function (f) {
+        return f.chatid === id;
+    });
+
+    if (!file) {
+        return next(error(404, 'file not found'));
+    }
+
+    res.download(file.path, fileChat.message);
+});
+
+app.post('/api/files/:id', function (req, res, next) {
+    var id = req.params.id;
+    var fileChat = chats.find(function (chat) {
+        return chat.id === id;
+    });
+
+    if (!fileChat) {
+        return next(error(404, 'file not found'));
+    }
+
+    var file = req.files.file;
+    var path = require('path');
+    var newPath = path.join(__dirname, './', 'files', file.name);
+    file.mv(newPath, function (err) {
+        if (err) {
+            return next(err);
+        }
+
+        // save the file path
+        files.push({
+            'chatid': id,
+            'path': newPath
+        });
+
+        fileChat.progress = 100;
+        res.send(fileChat);
+    });
 });
 
 

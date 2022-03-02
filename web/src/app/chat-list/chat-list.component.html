@@ -9,26 +9,17 @@
             </mat-card-actions>
         </mat-card>
 
-        <mat-card *ngIf="chat.type=='image/png'" class="image-card">
-            <mat-card-title>
-                <span>{{ chat.message }}</span>
-            </mat-card-title>
-            <img mat-card-md-image src="{{ chat.message }}">
-            <mat-card-actions align="end">
-                <button mat-button color="primary" name="delete" (click)="delete(chat)">Delete</button>
-                <button mat-button color="primary" name="copy" (click)="copy(chat.message)">Copy</button>
-                <a mat-button color="primary" href="{{ chat.message }}" download="{{ chat.message }}">Download</a>
-            </mat-card-actions>
-        </mat-card>
-
         <mat-card *ngIf="chat.type=='application/octet-stream'" class="file-card">
             <mat-card-title>
                 <span>{{ chat.message }}</span>
             </mat-card-title>
-            <mat-card-actions align="end">
+            <mat-card-actions align="end" *ngIf="chat.progress == 100">
                 <button mat-button color="primary" name="delete" (click)="delete(chat)">Delete</button>
-                <a mat-button color="primary" href="{{ chat.message }}" download="{{ chat.message }}">Download</a>
+                <button mat-button color="primary" name="download" (click)="download(chat)">Download</button>
             </mat-card-actions>
+            <mat-card-footer *ngIf="chat.progress != 100">
+                <mat-progress-bar mode="determinate" [value]="chat.progress"></mat-progress-bar>
+            </mat-card-footer>
         </mat-card>
     </div>
 
