@@ -60,6 +60,7 @@ export class ChatListComponent implements OnInit {
           var tempChats = this.chats.filter(chat => chat.progress !== 100);
           this.chats = tempChats.concat(chats);
         }
+        console.log(this.chats);
       }
     );
   }

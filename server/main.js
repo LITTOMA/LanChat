@@ -226,7 +226,7 @@ app.post('/api/files/:id', function (req, res, next) {
 
     var file = req.files.file;
     var path = require('path');
-    var newPath = path.join(__dirname, './', 'files', file.name);
+    var newPath = path.join(__dirname, './', 'files', `${id}.${file.name}`);
     file.mv(newPath, function (err) {
         if (err) {
             return next(err);
