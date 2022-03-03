@@ -36,6 +36,9 @@ export class ChatService {
   }
 
   getFile(chat: Chat) {
-    window.open(`/api/files/${chat.id}?k=${this.userService.getAccessKey()}`);
+    var a = document.createElement('a');
+    a.href = `/api/files/${chat.id}?k=${this.userService.getAccessKey()}`;
+    a.download = chat.message;
+    a.click();
   }
 }

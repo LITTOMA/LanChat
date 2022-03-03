@@ -20,10 +20,9 @@ export class ChatListComponent implements OnInit {
 
   ngOnInit(): void {
     this.chats = [];
-    // refresh chat list every second
     setInterval(() => {
       this.refreshChatList();
-    }, 10000);
+    }, 3000);
   }
 
   copy(s: string) {
@@ -67,5 +66,6 @@ export class ChatListComponent implements OnInit {
 
   addTemporyChat(chat: Chat) {
     this.chats.unshift(chat);
+    this.chats = this.chats.slice();
   }
 }

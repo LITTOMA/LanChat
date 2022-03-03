@@ -159,7 +159,7 @@ export class AppComponent implements OnInit {
                   chat.progress = Math.round(100 * event.loaded / event.total);
                 }
                 else if (event.type === HttpEventType.Response) {
-                  console.log(event.body);
+                  this.chatList.refreshChatList();
                 }
               }
             );
